@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+# Python script to compute the probability for an observation given a HMM model
+
+import sys
+from pyhmm import Forward, ForwardWithScale, ReadHMM, ReadSeq, getopt, lmap, \
+        matrix, vector
+
+def usage():
+    usage = 'Usage: ./testfor <file.hmm> <file.seq>'
+    print(usage)
+    sys.exit(0)
+
+def testfor():
+    '''
+    compute the probability for an observation given an HMM.
+    '''
+
+    opt = getopt()
+
+    if opt['argc'] != 3:
+        usage()
+
+    hmm = ReadHMM(opt['entity'][0])
+    T, O = ReadSeq(opt['entity'][1])
+    lmap(lambda x: x-1, O)
+
+    alpha = matrix(T, hmm.N)
+    print('-' * 30)
+    print('Forward without scaling')
+    print('Log Prob(observation| model) = %E' % Forward(hmm, O, alpha))
+
+    scale = vector(T)
+    print('-' * 30)
+    print('Forward with scaling')
+    print('Log Prob(observation| model) = %E' % \
+            ForwardWithScale(hmm, O, alpha, scale))
+
+if __name__ == '__main__':
+    testfor()
+

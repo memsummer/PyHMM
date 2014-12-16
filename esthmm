@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+# Python script to train a HMM model
+
+import sys
+from pyhmm import RandomInitHMM, PrintHMM, ReadHMM, ReadSeq, Baumwelch, \
+        lmap, getopt
+
+def usage():
+    usage = '''\
+Usage: ./esthmm.py [-v] -N <num_states> -M <num_observations> <file.seq>
+       ./esthmm.py [-v] -I <file.hmm> <file.seq>'''
+    print(usage)
+    sys.exit(0)
+
+def esthmm():
+    '''
+    estimate HMM parameters, using file format as the UMDHMM package.
+    '''
+
+    opt = getopt()
+
+    if opt['argc'] == 6 or opt['argc'] == 7:
+        N = int(opt['-N'])
+        M = int(opt['-M'])
+        hmm = RandomInitHMM(N, M)
+        T, O = ReadSeq(opt['entity'][0])
+        lmap(lambda x: x-1, O)
+
+        iiter, logprobold, logprobnew = Baumwelch(hmm, O)
+
+        if '-v' in opt:
+            print('Numbers of iteratoions: %d' % iiter, file=sys.stderr)
+            print('Log Prob(Observation| init model) = %E' % logprobold, \
+                    file=sys.stderr)
+            print('Log Prob(Observation| estimated model) = %E' % logprobnew, \
+                    file=sys.stderr)
+        print(PrintHMM(hmm))
+
+    elif opt['argc'] == 4 or opt['argc'] == 5:
+        hmm = ReadHMM(opt['-I'])
+        T, O = ReadSeq(opt['entity'][0])
+        lmap(lambda x: x-1, O)
+
+        iiter, logprobold, logprobnew = Baumwelch(hmm, O)
+
+        if '-v' in opt:
+            print('Numbers of iteratoions: %d' % iiter, file=sys.stderr)
+            print('Log Prob(Observation| init model) = %E' % logprobold, \
+                    file=sys.stderr)
+            print('Log Prob(Observation| estimated model) = %E' % logprobnew, \
+                    file=sys.stderr)
+        print(PrintHMM(hmm))
+
+    else:
+        usage()
+
+if __name__ == '__main__':
+    esthmm()

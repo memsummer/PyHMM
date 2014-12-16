@@ -1,0 +1,102 @@
+Simple HMM package in Python (PyHMM). 
+
+Author: Zhiyong You <zhiyongy0@outlook.com>
+URL: <>
+Version: 0.1.0
+Date: 15 Dec, 2014
+
+PyHMM -- Simple HMM package in Python -- is a simple HMM package writed in
+Python Programming Language. It implements the forward-backward algorithm
+and Viterbi algorithm. It also provides some scripts to demonstrate how to
+solve the three problems -- 'Problem 1', 'Problem 2' and 'Problem 3' ( which
+are come from the book SLP*, more about the book, see notes bellow) -- in
+HMM, these scripts are also writed in Python.
+
+This pakcage is created just for learning purpose. If you want to do some
+real jobs, you may want to implement the algorithms in C/C++ and call them
+in Python.
+
+The algorithms the package has implemented include:
+    Forward           (problem 1 according to SLP*)
+    ForwardWithScale  (scale method borrows from UMDHMM* package)
+    Backward
+    BackwardWithScale (scale method borrows from UMDHMM* package)
+    Viterbi           (problem 2 according to SLP*)
+    Baumwelch         (problem 3 according to SLP*, train an HMM model)
+    RandomInitHMM
+    ReadHMM           (file format borrows from UMDHMM* package)
+    ReadSeq
+    PrintHMM
+
+It also has implemented some utility functions:
+    lmap
+    vector
+    matrix
+    matrix3
+    getopt
+    
+Notes:
+    SLP: The book, Speech and Language Processing: An introduction to
+	natural language processing, computational linguistics, and speech
+	recognition, draft edition of June 25, 2007, by Daniel Jurafsky &
+	James H. Martin.
+    UMDHMM: The UMDHMM package, implemented in C, Version 1.02 (19 February,
+	1998), by Tapas Kanungo(kanungo@cfar.umd.edu), the web is 
+	http://www.cfar.umd.edu/~kanungo
+
+Contribution:
+    Feedback is always welcome ;-)
+
+File formats:
+The file format is borrowed from the UMDHMM package, but *NOTE* that the
+states and observations are encoded start from 0, *NOT* 1 interal, more about
+this see the python docstring of module pyhmm( you can do it use command
+"help(pyhmm)" after you import it).
+---------------------------------------------
+HMM file format:
+---------------------------------------------
+M= <number of symbols>
+N= <number of states>
+A:
+a11 a12 ... a1N
+a21 a22 ... a2N
+ .   .   .   .
+ .   .   .   .
+ .   .   .   .
+aN1 aN2 ... aNN
+B:
+b11 b12 ... b1M
+b21 b22 ... b2M
+ .   .   .   .
+ .   .   .   .
+ .   .   .   .
+bN1 bN2 ... bNM
+pi:
+pi1 pi2 ... piN
+
+---------------------------------------------
+Sample HMM file:
+---------------------------------------------
+M= 2
+N= 3
+A:
+0.333 0.333 0.333
+0.333 0.333 0.333
+0.333 0.333 0.333
+B:
+0.5   0.5  
+0.75  0.25
+0.25  0.75
+pi:
+0.333 0.333 0.333
+---------------------------------------------
+Sequence file format:
+---------------------------------------------
+T=<seqence lenght>
+o1 o2 o3 . . . oT
+---------------------------------------------
+Sample sequence file:
+---------------------------------------------
+T= 10
+1 1 1 1 2 1 2 2 2 2
+

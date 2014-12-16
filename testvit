@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+# Python script to find the most probable state sequence for an observation 
+# given a HMM model
+
+import sys
+from pyhmm import Viterbi, ReadHMM, ReadSeq, getopt, lmap, matrix, vector
+
+def usage():
+    usage = 'Usage: ./testvit <file.hmm> <file.seq>'
+    print(usage)
+    sys.exit(0)
+
+def testvit():
+    '''
+    find the most probable state sequence for an observation given an HMM.
+    '''
+
+    opt = getopt()
+
+    if opt['argc'] != 3:
+        usage()
+
+    hmm = ReadHMM(opt['entity'][0])
+    T, O = ReadSeq(opt['entity'][1])
+    lmap(lambda x: x-1, O)
+
+    logprob, path = Viterbi(hmm, O)
+    lmap(lambda x: x+1, path)
+
+    print('-' * 60)
+    print('Viterbi using direct probabilties')
+    print('Viterbi MLE log Prob(observation| model) = %E' % logprob)
+    print('Optimal state sequence:')
+    print('T= %d' % T)
+    print(' '.join(lmap(str, path)))
+
+if __name__ == '__main__':
+    testvit()
+
